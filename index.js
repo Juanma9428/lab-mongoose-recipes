@@ -30,11 +30,29 @@ mongoose
     { duration: 100 },
     { new: true }
   );
+
 })
 .then(updatedRecipe => {
   // Log the updated recipe
   console.log(updatedRecipe);
+  return Recipe.findOneAndDelete({title: 'Carrot Cake'})
 })
-.catch(error => {
-  console.error('Error connecting to the database', error);
-});
+.then(deleteRecipe =>{
+  if (deleteRecipe) {
+    console.log("deleteRecipe:" , deleteRecipe )
+  }
+  else{
+    console.log("no hay receta para eliminar")
+  }
+})
+.then(() => {
+  return mongoose.connection.close();
+})
+.then(() => {
+  console.log("Connection closed");
+  process.exit(1);
+})
+.catch(err => {
+  console.error(err)
+  process.exit()
+})
